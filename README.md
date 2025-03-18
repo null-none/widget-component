@@ -3,41 +3,52 @@ Small DOM manipulation library.
 
 
 ```javascript
-const taskListContainer = WidgetElement.create('div')
-  .addId('task-list-container')
-  .addClass('list-wrapper')
-  .addChild({
-    elem: 'ul',
-    id: 'task-list',
-    classes: [
-        'list',
-        'card-container',
-    ],
-});
+const taskListContainer = HtmlElement.create('div')
+    .addId('task-list-container')
+    .addClass('list-wrapper')
+    .addChild({
+        elem: 'input',
+        id: 'search-input',
+        type: 'change',
+        callback: function (event) {
+            console.log(event.target.value);
+        }
+    })
+    .addChild({
+        elem: 'ul',
+        id: 'task-list',
+        classes: [
+            'list',
+            'card-container',
+        ],
+    });
 taskListContainer.getChild('#task-list')
     .addChild({
-       element: 'li',
-        classes: [
-          'task-list-item',
-         'card',
-        ],
-        textContent: 'Task 1',
-    })
-    .addEventListener("click", (event) => {
-        alert("Task 1");
-    })
-    .addChild({
-        element: 'li',
+        elem: 'li',
+        id: 'task-1',
         classes: [
             'task-list-item',
             'card',
         ],
-        textContent: 'Task 2',
-    })
-    .addEventListener("click", (event) => {
-        alert("Task 2");
-    });
-
-
+        textContent: 'Task 1',
+        type: 'click',
+        callback: function () {
+            alert('Click event on Task 1');
+        }
+    }).
+    addChild(
+        {
+            elem: 'li',
+            id: 'task-2',
+            classes: [
+                'task-list-item',
+                'card',
+            ],
+            type: 'click',
+            textContent: 'Task 2',
+            callback: function () {
+                alert('Click event on Task 1');
+            }
+        });
 taskListContainer.appendTo(document.querySelector('body'));
 ```
