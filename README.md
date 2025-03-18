@@ -1,2 +1,2 @@
-# fluent-component
+# widget-component
 Small DOM manipulation library.
