@@ -1,16 +1,15 @@
 <html>
 
 <head>
-  <title>Example</title>
-  <script src="../index.js"></script>
-
+  <title>Demo</title>
+  <script src="index.js"></script>
 </head>
-
 <body>
   <p>Enter a number and press the button to get a Fibonacci list of that length.</p>
   <p>Press "x" next to a Fibonacci number to remove it from the list.</p>
   <script>
     const fibInput = HtmlElement.create({type: 'input', id: 'fibInput', value: '0'}).appendTo(document.body);  
+    
     HtmlElement.create({type: 'button', value: 'get fibonacci list', events: {
       click: () => changeFibList()}}).appendTo(document.body);
 
