@@ -1,54 +1,42 @@
-# widget-component
+## widget-component
+
 Small DOM manipulation library.
 
+### You can create HtmlElement with its classes, styles, events etc.
 
-```javascript
-const taskListContainer = HtmlElement.create('div')
-    .addId('task-list-container')
-    .addClass('list-wrapper')
-    .addChild({
-        elem: 'input',
-        id: 'search-input',
-        type: 'change',
-        callback: function (event) {
-            console.log(event.target.value);
-        }
-    })
-    .addChild({
-        elem: 'ul',
-        id: 'task-list',
-        classes: [
-            'list',
-            'card-container',
-        ],
-    });
-taskListContainer.getChild('#task-list')
-    .addChild({
-        elem: 'li',
-        id: 'task-1',
-        classes: [
-            'task-list-item',
-            'card',
-        ],
-        textContent: 'Task 1',
-        type: 'click',
-        callback: function () {
-            alert('Click event on Task 1');
-        }
-    }).
-    addChild(
-        {
-            elem: 'li',
-            id: 'task-2',
-            classes: [
-                'task-list-item',
-                'card',
-            ],
-            type: 'click',
-            textContent: 'Task 2',
-            callback: function () {
-                alert('Click event on Task 1');
-            }
-        });
-taskListContainer.appendTo(document.querySelector('body'));
+```
+const myDiv = HtmlElement.create({
+    type: 'div',
+    id: 'div_1',
+    value: 'Sample div',
+    classes: 'roundedBox smallShadow',
+    styles: {
+        background: "lawngreen",
+    },
+    events: {
+      click: () => someFunc(),
+    }
+});
+```
+
+### Append it to an element on the page or another HtmlElement
+
+```
+myDiv.appendTo(document.body);
+//or
+myDiv.appendTo(someHtmlElement);
+```
+
+### Add children to it
+
+```
+myDiv.addChildren([{type:'input', id: 'myInput'},{type:'button', value:'press me', events: {click: someFunc_2}}]);
+```
+
+### Modify it as you like
+
+```
+myDiv.addClass('someClass')
+     .setStyle({display: 'block'})
+     .addListener('mouseenter', someFunc_3);
 ```
