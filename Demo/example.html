@@ -1,0 +1,42 @@
+<html>
+
+<head>
+  <title>Example</title>
+  <script src="../index.js"></script>
+
+</head>
+
+<body>
+  <p>Enter a number and press the button to get a Fibonacci list of that length.</p>
+  <p>Press "x" next to a Fibonacci number to remove it from the list.</p>
+  <script>
+    const fibInput = HtmlElement.create({type: 'input', id: 'fibInput', value: '0'}).appendTo(document.body);  
+    HtmlElement.create({type: 'button', value: 'get fibonacci list', events: {
+      click: () => changeFibList()}}).appendTo(document.body);
+
+    const fibList = HtmlElement.create({type: 'ol', id: 'fibList'}).appendTo(document.body);
+
+    function changeFibList(){ 
+      fibList.removeChildren();
+      let fibCount = Number(fibInput.value);
+      if (fibCount <= 0) return;
+      for (let i = 1; i <= fibCount; i++ ){
+        HtmlElement.create({type: 'li', value: fib(i)}).appendTo(fibList)
+          .addChild({type: 'button', value: 'x', events: {
+            click: (e) => e.target.closest('li').remove()
+          }});
+      }
+    };
+
+    const fib = (function() {
+      const cache = {};
+      return function fibRaw(n){
+        if (n in cache) return cache[n];
+        if (n <= 1) return BigInt(n);
+        return (cache[n] = fibRaw(n - 1) + fibRaw(n - 2));
+      }
+    })();
+  </script>
+</body>
+
+</html>
