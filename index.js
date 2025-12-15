@@ -1,4 +1,5 @@
 //////// HtmlElement constructor and methods
+//////// Version 1.0
 
 function HtmlElement(elem) {
   //elem type | whole elem | json
@@ -231,7 +232,7 @@ HtmlElement.prototype.clone = function () {
 
 //////// wrappers
 
-function addFileCSS(cssUrl) {
+function includeFileCSS(cssUrl) {
   HtmlElement.create({
     type: "link",
     attrs: {
@@ -241,7 +242,7 @@ function addFileCSS(cssUrl) {
   }).appendTo(document.head);
 }
 
-function addFileJS(jsUrl) {
+function includeFileJS(jsUrl) {
   HtmlElement.create({
     type: "script",
     attrs: {
