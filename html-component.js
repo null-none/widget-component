@@ -475,3 +475,10 @@ function includeFileJS(jsUrl) {
     },
   }).appendTo(document.head);
 }
+
+
+exports.htmlComponent = {
+  HtmlElement: HtmlElement,
+  includeFileCSS: includeFileCSS,
+  includeFileJS: includeFileJS,
+};

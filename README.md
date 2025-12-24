@@ -1,6 +1,19 @@
-## widget-component
+## html-component
 
 Small DOM manipulation library.
+
+### Install
+
+```bash
+npm install html-component
+```
+
+
+### Tests
+
+```bash
+npm run tests
+```
 
 ### Example
 
