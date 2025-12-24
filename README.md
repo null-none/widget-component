@@ -12,7 +12,7 @@ npm install html-component
 ### Tests
 
 ```bash
-npm run tests
+npm run test
 ```
 
 ### Example
