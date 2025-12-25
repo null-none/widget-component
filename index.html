@@ -186,7 +186,7 @@
         name: "group1",
       }
     }).appendTo(container);   
-    const labelRadio12= HtmlElement.create({
+    const labelRadio2= HtmlElement.create({
       type: "label",
       attrs: {
         for: "radio2",
@@ -196,7 +196,78 @@
       },
       value: "radio 2",
     }).appendTo(container);      
+    
+    newRow.clone().appendTo(container);
 
+    const colorInput1= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "color",
+      },
+    }).appendTo(container);  
+
+    const colorInput2= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "color",
+      },
+      clients: [colorInput1],
+    }).appendTo(container);    
+
+    const dateInput1= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "date",
+      },
+    }).appendTo(container);  
+
+    const dateInput2= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "date",
+      },
+      clients: [dateInput1],
+    }).appendTo(container);      
+
+    const rangeInput1= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "range",
+      },
+    }).appendTo(container);  
+
+    const rangeInput2= HtmlElement.create({
+      type: "input",
+      attrs: {
+        type: "range",
+      },
+      clients: [rangeInput1],
+    }).appendTo(container);     
+
+    const select1= HtmlElement.create({
+      type: "select",
+    }).addChild({
+      type: "option",
+      value: "1",
+      textContent: "1", 
+    }).addChild({
+      type: "option",
+      value: "2",
+      textContent: "2", 
+    }).appendTo(container);  
+
+    const select2= HtmlElement.create({
+      type: "select",
+      clients: [select1],
+    }).addChild({
+      type: "option",
+      value: "1",
+      textContent: "1",
+    }).addChild({
+      type: "option",
+      value: "2",
+      textContent: "2",     
+    }).appendTo(container);       
     //////////////////////////////
 
     const circle = HtmlElement.create({

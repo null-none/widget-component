@@ -53,10 +53,23 @@ function HtmlElement(elem) {
     }
     case "TEXTAREA":
     case "SELECT":
+    case "OPTION":
       this.bindValue = "value";
       break;
     default:
       this.bindValue = null;
+  }
+
+  if (this.bindValue !== "textContent") {
+    if (inputDataType === "json" && "textContent" in elem)
+      this.element.textContent = elem.textContent;
+
+    Object.defineProperty(this, "textContent", {
+      get: () => this.element.textContent,
+      set: (val) => {
+        this.element.textContent = val;
+      },
+    });
   }
 
   if (this.bindValue === "checked") {
@@ -371,9 +384,6 @@ HtmlElement.prototype.clone = function (withEvents = false) {
   const clonedDom = this.element.cloneNode(true);
   const clone = new HtmlElement(clonedDom);
 
-  /* if (this.bindValue === "value") {
-    clone.value = this.value;
-  }*/
   if (this.bindValue) {
     clone.value = this.value;
   }
@@ -475,7 +485,6 @@ function includeFileJS(jsUrl) {
     },
   }).appendTo(document.head);
 }
-
 
 exports.htmlComponent = {
   HtmlElement: HtmlElement,
