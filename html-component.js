@@ -216,7 +216,7 @@ HtmlElement.getBySelector = function (selector) {
   return elem ? new HtmlElement(elem) : null;
 };
 
-HtmlElement.getAllBySelector = function (selector) {
+HtmlElement.getBySelectorAll = function (selector) {
   const elems = document.querySelectorAll(selector);
   return Array.from(elems).map((el) => new HtmlElement(el));
 };
@@ -227,17 +227,34 @@ HtmlElement.prototype.remove = function () {
 };
 
 HtmlElement.prototype.destroy = function () {
-  if (this.element) {
+  if (this.element && this.element.parentNode) {
     this.element.remove();
   }
 
+  if (this.clients) {
+    for (let [client, listener] of this.clients.entries()) {
+      if (listener) this.element?.removeEventListener("change", listener);
+    }
+    this.clients.clear();
+  }
+
+  if (this.events) {
+    for (let type in this.events) {
+      this.events[type].forEach((fn) => {
+        this.element?.removeEventListener(type, fn);
+      });
+    }
+    this.events = null;
+  }
+
+  const safeKeys = Object.getOwnPropertyNames(this).filter(
+    (k) => !["value", "textContent", "classes", "attrs", "styles"].includes(k)
+  );
+  for (let key of safeKeys) {
+    this[key] = null;
+  }
+
   this.element = null;
-  this.initArgs = null;
-  this.events = null;
-  this.attrs = null;
-  this.styles = null;
-  this.bindValue = null;
-  this.clients = null;
 };
 
 HtmlElement.prototype.addId = function (id) {
@@ -262,18 +279,16 @@ HtmlElement.prototype.addClasses = function (...classNames) {
   return this;
 };
 
-/*
-HtmlElement.prototype.setValue = function (val) {
-  if (this.bindValue) {
-    this[this.bindValue === "value" ? "value" : "textContent"] = val;
-  }
-  return this;
-};*/
 HtmlElement.prototype.setValue = function (val) {
   if (this.bindValue) {
     this.element[this.bindValue] = val;
   }
   return this;
+};
+
+HtmlElement.prototype.getValue = function () {
+  if (!this.bindValue) return undefined;
+  return this.element[this.bindValue];
 };
 
 HtmlElement.prototype.setAttr = function (attrName, attrVal) {
@@ -294,42 +309,32 @@ HtmlElement.prototype.setStyle = function (styles) {
   return this;
 };
 
-HtmlElement.addEventListener = function (htmlElement, event, callback) {
-  if (!(htmlElement instanceof HtmlElement)) {
-    throw new TypeError("first argument should be HtmlElement");
+HtmlElement.prototype.addEventListener = function (event, callback) {
+  if (!this.events) this.events = {};
+  if (!this.events[event]) this.events[event] = [];
+
+  if (!this.events[event].includes(callback)) {
+    this.element.addEventListener(event, callback);
+    this.events[event].push(callback);
   }
 
-  if (!htmlElement.events) htmlElement.events = {};
-  if (!htmlElement.events[event]) htmlElement.events[event] = [];
-
-  if (!htmlElement.events[event].includes(callback)) {
-    htmlElement.element.addEventListener(event, callback);
-    htmlElement.events[event].push(callback);
-  }
-
-  return htmlElement;
+  return this;
 };
 
-HtmlElement.removeEventListener = function (htmlElement, event, callback) {
-  if (!(htmlElement instanceof HtmlElement)) {
-    throw new TypeError("first argument should be HtmlElement");
-  }
-
-  if (!htmlElement.events || !htmlElement.events[event]) return htmlElement;
+HtmlElement.prototype.removeEventListener = function (event, callback) {
+  if (!this.events || !this.events[event]) return this;
 
   if (callback) {
-    htmlElement.element.removeEventListener(event, callback);
-    htmlElement.events[event] = htmlElement.events[event].filter(
-      (fn) => fn !== callback
-    );
+    this.element.removeEventListener(event, callback);
+    this.events[event] = this.events[event].filter((fn) => fn !== callback);
   } else {
-    htmlElement.events[event].forEach((fn) =>
-      htmlElement.element.removeEventListener(event, fn)
+    this.events[event].forEach((fn) =>
+      this.element.removeEventListener(event, fn)
     );
-    htmlElement.events[event] = [];
+    this.events[event] = [];
   }
 
-  return htmlElement;
+  return this;
 };
 
 HtmlElement.prototype.addChild = function (args = {}) {
