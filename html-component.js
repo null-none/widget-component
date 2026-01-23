@@ -1,5 +1,5 @@
 //////// HtmlElement constructor and methods
-//////// Version 1.0
+//////// Version 3.0
 
 function HtmlElement(elem) {
   //elem: type | whole elem | json
@@ -25,6 +25,7 @@ function HtmlElement(elem) {
     case "P":
     case "BUTTON":
     case "LABEL":
+    case "A":
       this.bindValue = "textContent";
       break;
     case "INPUT": {
@@ -248,7 +249,7 @@ HtmlElement.prototype.destroy = function () {
   }
 
   const safeKeys = Object.getOwnPropertyNames(this).filter(
-    (k) => !["value", "textContent", "classes", "attrs", "styles"].includes(k)
+    (k) => !["value", "textContent", "classes", "attrs", "styles"].includes(k),
   );
   for (let key of safeKeys) {
     this[key] = null;
@@ -329,7 +330,7 @@ HtmlElement.prototype.removeEventListener = function (event, callback) {
     this.events[event] = this.events[event].filter((fn) => fn !== callback);
   } else {
     this.events[event].forEach((fn) =>
-      this.element.removeEventListener(event, fn)
+      this.element.removeEventListener(event, fn),
     );
     this.events[event] = [];
   }
@@ -340,6 +341,29 @@ HtmlElement.prototype.removeEventListener = function (event, callback) {
 HtmlElement.prototype.addChild = function (args = {}) {
   const child = HtmlElement.create(args);
   this.append(child);
+  return this;
+};
+
+HtmlElement.prototype.addChildWithLabel = function (args = {}) {
+  const childArgs = Object.fromEntries(
+    Object.entries(args).filter(([key]) => !key.startsWith("label_")),
+  );
+
+  const child = HtmlElement.create(childArgs);
+  this.append(child);
+
+  if (args.id && args.label_value) {
+    const label = HtmlElement.create({
+      type: "label",
+      attrs: {
+        for: childArgs.id,
+      },
+      value: args.label_value,
+      classes: args?.label_classes || "",
+    });
+    this.append(label);
+  }
+
   return this;
 };
 
