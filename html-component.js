@@ -344,29 +344,6 @@ HtmlElement.prototype.addChild = function (args = {}) {
   return this;
 };
 
-HtmlElement.prototype.addChildWithLabel = function (args = {}) {
-  const childArgs = Object.fromEntries(
-    Object.entries(args).filter(([key]) => !key.startsWith("label_")),
-  );
-
-  const child = HtmlElement.create(childArgs);
-  this.append(child);
-
-  if (args.id && args.label_value) {
-    const label = HtmlElement.create({
-      type: "label",
-      attrs: {
-        for: childArgs.id,
-      },
-      value: args.label_value,
-      classes: args?.label_classes || "",
-    });
-    this.append(label);
-  }
-
-  return this;
-};
-
 HtmlElement.prototype.addAndReturnChild = function (args = {}) {
   const child = HtmlElement.create(args);
   this.append(child);
